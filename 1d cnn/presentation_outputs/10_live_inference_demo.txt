@@ -1,0 +1,17 @@
+LIVE INFERENCE DEMO — 10 Random Samples from Held-Out Test Set
+======================================================================
+
+  #  Actual   Predicted  Match        Time  Confidence
+------------------------------------------------------
+  1      PP          PP    YES      9.21ms     100.0%
+  2      PE          PE    YES      0.60ms      99.4%
+  3      PS          PS    YES      0.49ms     100.0%
+  4      PE          PE    YES      0.34ms     100.0%
+  5     PET         PET    YES      0.40ms     100.0%
+  6      PE          PE    YES      0.44ms     100.0%
+  7      PP          PP    YES      0.38ms     100.0%
+  8      PP          PP    YES      0.35ms     100.0%
+  9     PET         PET    YES      0.39ms     100.0%
+ 10      PE          PE    YES      0.34ms      98.9%
+------------------------------------------------------
+Accuracy on demo: 10/10 = 100%

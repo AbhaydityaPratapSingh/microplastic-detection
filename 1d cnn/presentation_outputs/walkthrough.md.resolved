@@ -1,0 +1,40 @@
+# 1D-CNN Presentation Outputs — Walkthrough
+
+All outputs saved to `presentation_outputs/` inside your project folder.
+
+## Generated Files (11 total)
+
+| # | File | Description |
+|---|------|-------------|
+| 1 | `01_dataset_class_distribution.png` | Bar chart: PE=3800, PET=2480, PP=3078, PS=2527 |
+| 2 | `02_sample_spectra.png` | One reflectance spectrum per polymer class |
+| 3 | `03_model_architecture.txt` | Full architecture + 265,476 params breakdown |
+| 4 | `04_training_curves.png` | Loss & accuracy over 25 epochs (dual plot) |
+| 5 | `05_confusion_matrix.png` | Heatmap on held-out 20% test set |
+| 6 | `06_classification_report.txt` | Precision/Recall/F1 — **99% overall accuracy** |
+| 7 | `07_per_class_accuracy.png` | Bar chart: PE=99.3%, PET=100%, PP=97.2%, PS=98.8% |
+| 8 | `08_cross_validation.png` | 5-fold CV bar chart (mean 98.12% ± 1.80%) |
+| 9 | `09_learning_curves_cv.png` | Train vs Val loss from last CV fold |
+| 10 | `10_live_inference_demo.txt` | 10 random predictions with timing & confidence |
+| 11 | `presentation_summary.txt` | Full text dump of all console output |
+
+## Key Results for Your Presentation
+
+- **Dataset**: 11,885 samples × 256 spectral channels, 4 polymer classes
+- **Model**: 1D-CNN with 265,476 parameters (2 conv layers + 2 FC layers)
+- **Test Accuracy**: **99%** on held-out 20% test set
+- **Per-class**: PET=100%, PE=99.3%, PS=98.8%, PP=97.2%
+- **5-Fold CV**: Mean 98.12% (SD=1.80%)
+- **Overfitting Risk**: LOW (train-val loss gap = 0.0226)
+- **Data Leakage**: 0 duplicate rows
+- **Inference Speed**: ~0.4ms per sample
+
+## Suggested 20-min Presentation Flow
+
+1. **Problem & Motivation** (3 min) — microplastic detection challenge
+2. **Dataset Overview** (2 min) — use `01_dataset_class_distribution.png` + `02_sample_spectra.png`
+3. **Model Architecture** (3 min) — use `03_model_architecture.txt` + ONNX diagram from `project documents/`
+4. **Training** (3 min) — use `04_training_curves.png` (show convergence)
+5. **Results** (5 min) — use `05_confusion_matrix.png` + `06_classification_report.txt` + `07_per_class_accuracy.png`
+6. **Robustness** (2 min) — use `08_cross_validation.png` + `09_learning_curves_cv.png`
+7. **Live Demo + Conclusion** (2 min) — run [03_test_model.py](file:///c:/Users/Abhayditya%20Singh/Desktop/MINOR%20PROJECT/03_test_model.py) live or show `10_live_inference_demo.txt`

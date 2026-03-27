@@ -1,0 +1,13 @@
+ResNet-18 Microplastic Classification Report
+Test Accuracy: 1.0000
+
+              precision    recall  f1-score   support
+
+          PE     1.0000    1.0000    1.0000        54
+         PET     1.0000    1.0000    1.0000        87
+          PP     1.0000    1.0000    1.0000        52
+          PS     1.0000    1.0000    1.0000        71
+
+    accuracy                         1.0000       264
+   macro avg     1.0000    1.0000    1.0000       264
+weighted avg     1.0000    1.0000    1.0000       264

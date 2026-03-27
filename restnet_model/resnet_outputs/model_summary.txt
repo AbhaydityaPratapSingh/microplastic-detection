@@ -1,0 +1,18 @@
+ResNet-18 Microplastic Classifier - Model Summary
+==================================================
+
+Architecture    : ResNet-18 (pretrained on ImageNet)
+Input Size      : 64x64x3
+Output Classes  : 4 (PE, PET, PP, PS)
+Total Parameters: 11,178,564
+Trainable       : 11,021,060
+Frozen          : 157,504
+
+Training Config:
+  Optimizer     : Adam (lr=0.001)
+  Scheduler     : StepLR (step=10, gamma=0.5)
+  Batch Size    : 32
+  Epochs        : 30
+  Dropout       : 0.5
+  Augmentation  : Flip, Rotate, ColorJitter, Affine, RandomErasing
+  Device        : cpu
