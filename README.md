@@ -18,6 +18,30 @@ The primary objective of this project is to develop robust machine learning mode
 *   **/image_dataset/**: Processed and curated image datasets ready for training the ResNet model.
 *   **full_spectra_with_labels.csv**: The primary dataset for the 1D-CNN model, containing the spectral readings mapped to their corresponding microplastic classifications.
 
+*   ## Project Architecture
+
+```mermaid
+graph TD
+    A[Raw Datasets] --> B(Spectral Data)
+    A --> C(Image Data)
+    
+    subgraph "1D-CNN Pipeline (Spectral Analysis)"
+    B -->|full_spectra_with_labels.csv| D[Data Verification & Preprocessing]
+    D --> E[1D-CNN Model]
+    E --> F[Repeated Stratified K-Fold CV]
+    F --> G[Spectral Classification Metrics]
+    end
+    
+    subgraph "ResNet Pipeline (Visual Analysis)"
+    C -->|raw_image / image_dataset| H[Image Preprocessing & Curation]
+    H --> I[ResNet Model]
+    I --> J[Visual Classification Metrics]
+    end
+    
+    G --> K((Microplastic Detection Results))
+    J --> K
+```
+
 ## Key Features & Evaluation
 
 *   **Robustness Analysis**: The 1D-CNN models have undergone rigorous evaluation, including Repeated Stratified K-Fold cross-validation, to ensure consistent and reliable performance across different data splits.
