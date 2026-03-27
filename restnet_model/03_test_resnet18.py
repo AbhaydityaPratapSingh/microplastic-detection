@@ -1,10 +1,8 @@
 """
-03_test_resnet18.py -- Microplastic Dual-Model Demo
-====================================================
-Simulates the real-world deployment pipeline:
-1. ResNet-18 analyzes a crop image to classify the polymer visually.
-2. 1D-CNN logic (simulated) analyzes spectral data to confirm identity.
-Demonstrates the complementary nature of both models.
+03_test_resnet18.py -- Microplastic ResNet-18 Demo
+===================================================
+Runs ResNet-18 inference on 5 random test-set crops and
+displays results in the terminal + a matplotlib grid figure.
 """
 
 import os, random, time
@@ -12,6 +10,7 @@ import torch
 import torch.nn as nn
 from torchvision import datasets, transforms, models
 from PIL import Image
+import matplotlib.pyplot as plt
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(PROJECT_DIR)
@@ -77,27 +76,10 @@ def predict_image(model, img_path):
     return pred_class, confidence.item(), elapsed_ms, probs
 
 
-def simulate_spectral_model(actual_class, resnet_pred, resnet_conf):
-    """
-    Simulate the 1D-CNN spectral model behavior.
-    The real 1D-CNN acts as a high-accuracy ground-truth confirmation.
-    """
-    time.sleep(0.001)  # Simulate 1D-CNN compute time (~0.4ms)
-    spectral_ms = 0.42
-
-    # Spectral model is highly accurate (99%), so it almost always gets the true class
-    correct_prob = random.uniform(0.98, 0.999)
-
-    return actual_class, correct_prob, spectral_ms
-
-
 def main():
     print("=" * 65)
-    print("      MICROPLASTIC DUAL-MODEL CLASSIFICATION DEMO      ")
+    print("      MICROPLASTIC ResNet-18 CLASSIFICATION DEMO      ")
     print("=" * 65)
-    print("Demonstrating the real-world pipeline:")
-    print("  1. ResNet-18 (Image): Fast visual screening")
-    print("  2. 1D-CNN (Spectral): Precise chemical confirmation")
 
     try:
         model = load_model()
@@ -106,6 +88,7 @@ def main():
         return
 
     samples = get_random_test_images(5)
+    results = []  # (img_path, true_class, pred_class, confidence)
 
     for i, (img_path, actual_class) in enumerate(samples):
         print("\n" + "-" * 65)
@@ -113,36 +96,36 @@ def main():
         print(f"GROUND TRUTH: {actual_class}")
         print("-" * 65)
 
-        # ── Stage 1: Image Model ──────────────────────────────────────────────
         img_pred, img_conf, img_ms, _ = predict_image(model, img_path)
 
-        print("STAGE 1: IMAGE SCAN (ResNet-18)")
         print(f"  Prediction : {img_pred}")
         print(f"  Confidence : {img_conf*100:.1f}%")
         print(f"  Speed      : {img_ms:.2f} ms")
 
-        # ── Stage 2: Spectral Model ───────────────────────────────────────────
-        spec_pred, spec_conf, spec_ms = simulate_spectral_model(actual_class, img_pred, img_conf)
-
-        print("\nSTAGE 2: SPECTRAL SCAN (1D-CNN)")
-        print(f"  Prediction : {spec_pred}")
-        print(f"  Confidence : {spec_conf*100:.1f}%")
-        print(f"  Speed      : {spec_ms:.2f} ms")
-
-        # ── Final Verdict ─────────────────────────────────────────────────────
-        print("\nFINAL VERDICT:")
-        if img_pred == spec_pred:
-            print(f"  Type       : {spec_pred} (CONFIRMED by both models)")
-            print(f"  Integrity  : HIGH CONFIDENCE")
-        else:
-            print(f"  Type       : {spec_pred} (Corrected by Spectral analysis)")
-            print(f"  Integrity  : IMAGE/SPECTRAL MISMATCH INITIALLY")
-            print(f"  Reason     : Visually ambiguous particle accurately identified by chemical fingerprint.")
+        results.append((img_path, actual_class, img_pred, img_conf))
 
     print("\n" + "=" * 65)
-    print("Dual-model pipeline demonstration complete.")
+    print("ResNet-18 classification demo complete.")
     print("=" * 65)
+
+    # ── Matplotlib Grid Visualization ────────────────────────────────────────
+    fig, axes = plt.subplots(1, 5, figsize=(18, 4))
+    for ax, (path, true_cls, pred_cls, conf) in zip(axes, results):
+        img = Image.open(path).convert("RGB")
+        ax.imshow(img)
+        ax.axis("off")
+        correct = (true_cls == pred_cls)
+        color = "green" if correct else "red"
+        ax.set_title(f"True: {true_cls}", fontsize=11, fontweight="bold",
+                     color=color, pad=8)
+        ax.text(0.5, -0.05, f"Pred: {pred_cls} ({conf*100:.1f}%)",
+                transform=ax.transAxes, ha="center", fontsize=10, color=color)
+    fig.suptitle("Microplastic ResNet-18 \u2014 5 Random Test Crops",
+                 fontsize=14, fontweight="bold")
+    plt.tight_layout()
+    plt.show()
 
 
 if __name__ == "__main__":
     main()
+
