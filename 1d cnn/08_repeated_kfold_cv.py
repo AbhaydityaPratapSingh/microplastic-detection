@@ -26,6 +26,9 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import RepeatedStratifiedKFold
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(PROJECT_DIR)
@@ -169,6 +172,38 @@ def main():
     print("\nIndividual run accuracies:")
     for i, a in enumerate(accuracies):
         print(f"  Run {i+1}: {a:.2f}%")
+
+    # ── 5. Save Cross-Validation Graph ─────────────────────────────────────────
+    out_dir = os.path.join(PROJECT_DIR, "presentation_outputs")
+    os.makedirs(out_dir, exist_ok=True)
+
+    fig, ax = plt.subplots(figsize=(9, 5))
+    run_labels = [f"Run {i+1}\n(seed {(i+1)*100})" for i in range(NUM_RUNS)]
+    colors = ['#0077B6', '#00B4D8', '#2A9D8F', '#E9C46A', '#E76F51']
+    bars = ax.bar(run_labels, accuracies, color=colors[:NUM_RUNS],
+                  edgecolor='#333', linewidth=0.8)
+
+    for bar, val in zip(bars, accuracies):
+        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.15,
+                f'{val:.2f}%', ha='center', va='bottom', fontsize=12,
+                fontweight='bold')
+
+    ax.axhline(y=mean_acc, color='red', linestyle='--', linewidth=1.8,
+               label=f'Mean: {mean_acc:.2f}% ± {std_acc:.2f}%')
+
+    ax.set_ylim(max(0, min(accuracies) - 5), 102)
+    ax.set_xlabel("Random Initialization", fontsize=13)
+    ax.set_ylabel("Accuracy (%)", fontsize=13)
+    ax.set_title(f"1D-CNN Cross-Validation — {NUM_RUNS} Runs on Fold {TARGET_INDEX}",
+                 fontsize=14, fontweight='bold')
+    ax.legend(fontsize=11, loc='lower right')
+    ax.grid(axis='y', linestyle='--', alpha=0.4)
+
+    fig.tight_layout()
+    path = os.path.join(out_dir, "08_cross_validation.png")
+    fig.savefig(path, dpi=200, bbox_inches='tight')
+    plt.close(fig)
+    print(f"\n  Saved graph → {path}")
 
 
 if __name__ == "__main__":
